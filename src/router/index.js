@@ -89,6 +89,8 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to) => {
   if (!isNavigating) return;
+
+  console.log(`[ROUTE] isNavigating flag is true, proceeding to finalize navigation. :${isNavigating}`);
   const duration = (performance.now() - navigationStartTime).toFixed(2);
   console.log(`[DONE] Navigation to "${to.path}" finished in ${duration}ms.`);
   isNavigating = false;

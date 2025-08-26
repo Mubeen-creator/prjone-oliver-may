@@ -6,16 +6,34 @@ function normalize(path) {
   return path.replace(/\/+$/, "").split("?")[0].split("#")[0] || "/";
 }
 
+// function getRouteBySlug(path) {
+//   const cleanPath = normalize(path);
+//   console.log(`[GUARD] Cleaned path for matching: "${cleanPath}"`);
+//   return routesJson.find(
+//     (route) =>
+//       normalize(route.slug) === cleanPath ||
+//       (route.dynamicRoute &&
+//         route.slug.includes("/:") &&
+//         cleanPath.match(new RegExp(route.slug.replace(/:[^/]+/g, "[^/]+"))))
+//   );
+// }
 function getRouteBySlug(path) {
   const cleanPath = normalize(path);
   console.log(`[GUARD] Cleaned path for matching: "${cleanPath}"`);
-  return routesJson.find(
+  let route = routesJson.find(
     (route) =>
       normalize(route.slug) === cleanPath ||
       (route.dynamicRoute &&
         route.slug.includes("/:") &&
         cleanPath.match(new RegExp(route.slug.replace(/:[^/]+/g, "[^/]+"))))
   );
+if (route?.inheritConfigFromParent) {   const parentRoute = routesJson.find(r => r.slug === "/dashboard");
+  console.log(`[GUARD] Inheriting config from parent for "${cleanPath}": ${JSON.stringify(parentRoute)}`);
+  console.log(`[GUARD] Dynamic match pattern="${route.slug}" tested against="${cleanPath}" → MATCHED`);
+
+  route = { ...parentRoute, ...route, requiresAuth: parentRoute.requiresAuth, redirectIfNotAuth: parentRoute.redirectIfNotAuth };
+}
+  return route;
 }
 
 function getParentRouteDeps(path) {
@@ -35,9 +53,12 @@ function getParentRouteDeps(path) {
 export default function routeGuard(to, from, next) {
   const auth = useAuthStore();
   const user = auth.simulate || auth.currentUser;
+  console.log(`[GUARD] Session hydration complete → ${JSON.stringify(user)}`);
 
   console.log(`[GUARD] Navigation request to "${to.path}" from "${from.path}"`);
   const route = getRouteBySlug(to.path);
+
+  console.log(`[GUARD] Route : ${JSON.stringify(route)}`);
 
   // --- 1. Token expiration check ---
   const now = Math.floor(Date.now() / 1000);
@@ -61,6 +82,7 @@ export default function routeGuard(to, from, next) {
   // if (route?.requiresAuth && !user) {
   //   return next(route.redirectIfNotAuth || "/log-in");
   // }
+console.log(`[GUARD] Route detection → requiresAuth=${route?.requiresAuth}, redirectIfNotAuth=${route?.redirectIfNotAuth}, redirectIfLoggedIn=${route?.redirectIfLoggedIn}`);
 
   if(route?.requiresAuth) {
     console.log(`[GUARD] Route requires auth`)
@@ -68,6 +90,7 @@ export default function routeGuard(to, from, next) {
       console.warn(`[GUARD] No user session -> redirect to ${route.redirectIfNotAuth || "/log-in"}`)
       return next(route.redirectIfNotAuth || "/log-in");
     }
+    console.log(`[GUARD] Auth check passed → user logged in`);
   }else{
     console.log(`[GUARD] Routes does not require auth`)
   }
@@ -77,8 +100,15 @@ export default function routeGuard(to, from, next) {
   // }
 
   if(route?.redirectIfLoggedIn && user){
+    if(user){
     console.warn(`[GUARD] User already logged in -> redirect to ${route.redirectIfLoggedIn}`)
+    
     return next(route.redirectIfLoggedIn);
+    }else {
+      console.log(`[GUARD] RedirectIfLoggedIn not triggered → user not logged in`);
+
+    }
+
   }
 
   // --- 3. Route existence check ---
