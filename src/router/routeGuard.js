@@ -8,6 +8,7 @@ function normalize(path) {
 
 function getRouteBySlug(path) {
   const cleanPath = normalize(path);
+  console.log(`[GUARD] Cleaned path for matching: "${cleanPath}"`);
   return routesJson.find(
     (route) =>
       normalize(route.slug) === cleanPath ||
@@ -24,7 +25,9 @@ function getParentRouteDeps(path) {
     segments.pop();
     const parentPath = segments.join("/") || "/";
     const parent = getRouteBySlug(parentPath);
-    if (parent?.inheritConfigFromParent) parents.push(parent);
+    if (parent?.inheritConfigFromParent) {
+      console.log(`[GUARD] Found parent route for "${path}": "${parentPath}"`);
+      parents.push(parent)};
   }
   return parents.reverse();
 }
@@ -41,6 +44,7 @@ export default function routeGuard(to, from, next) {
 
   if(user?.raw?.exp){
     console.log(`[GUARD] Token expiry: ${user.raw.exp}, now: ${now}`)
+    console.log(`[GUARD] Token details: ${JSON.stringify(user.raw)}`)
     if(now >= user.raw.exp){
       console.log("[GUARD] Token expired -> logging out & redirect to /log-in")
       auth.logout();
@@ -135,6 +139,7 @@ export default function routeGuard(to, from, next) {
 
     for (const [key, val] of Object.entries(roleDeps)) {
       console.log(`[GUARD] Role-based dep "${key}" required=${val?.required}, user=${user?.[key]}`);
+      console.log(`[GUARD] Checking role-based dep "${key}" against user data: ${JSON.stringify(user)}`)
       if (val?.required && !user?.[key]) {
         console.warn(`[GUARD]  Missing dependency "${key}" → redirect to ${val.fallbackSlug || "/404"}`);
         return next(val.fallbackSlug || "/404");

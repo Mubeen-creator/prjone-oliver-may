@@ -68,6 +68,7 @@ router.beforeEach((to, from, next) => {
   console.log(`[ROUTE] Incoming navigation request: "${to.path}"`);
   console.log(`[CHECK] Looking for matching route configuration...`);
   const matchedRoute = routeRecords.find((r) => r.path === to.path);
+  console.log(`[ROUTE] Searching route config for path: "${to.path}" , matched: ${JSON.stringify(matchedRoute)}`);
   if (!matchedRoute) {
     console.log(`[404] No route found for "${to.path}". Redirecting to /404.`);
     return next("/404");
