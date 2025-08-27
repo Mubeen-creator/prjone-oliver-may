@@ -57,7 +57,7 @@ export async function preloadAssets(urls, apply) {
     groupPromises.push(limitConcurrency(groups[domain], (url) => preloadAsset(url, apply), 5));
   }
   await Promise.all(groupPromises);
-  console.log(`[ASSETS] Completed limited ${apply ? 'preload' : 'prefetch'} for all assets`);
+  // console.log(`[ASSETS] Completed limited ${apply ? 'preload' : 'prefetch'} for all assets`);
 }
 
 export function preloadAsset(url, apply = false) {

@@ -28,10 +28,10 @@ export const useSectionsStore = defineStore("sections", {
           //   )}`
           // );
         } else {
-          console.log(`[HYDRATE] No stored sections found`);
+          // console.log(`[HYDRATE] No stored sections found`);
         }
       } else {
-        console.log(`[HYDRATE] Version mismatch, resetting activated sections`);
+        // console.log(`[HYDRATE] Version mismatch, resetting activated sections`);
         this.reset();
         localStorage.setItem(LS_VER_KEY, appVersion);
       }
@@ -49,48 +49,48 @@ export const useSectionsStore = defineStore("sections", {
     },
     persist() {
       localStorage.setItem(LS_KEY, JSON.stringify(this.activated));
-      console.log(
-        `[PERSIST] Sections state saved to localStorage: ${JSON.stringify(
-          this.activated
-        )}`
-      );
+      // console.log(
+      //   `[PERSIST] Sections state saved to localStorage: ${JSON.stringify(
+      //     this.activated
+      //   )}`
+      // );
     },
     markActivated(section) {
       if (!this.activated[section]) {
         this.activated[section] = true;
-        console.log(`[SECTION] Marked "${section}" as activated`);
+        // console.log(`[SECTION] Marked "${section}" as activated`);
         this.persist();
       } else {
-        console.log(`[SECTION] "${section}" already activated, no change`);
+        // console.log(`[SECTION] "${section}" already activated, no change`);
       }
     },
     isActivated(section) {
       const activated = this.activated[section];
-      console.log(
-        `[SECTION] Checking activation for "${section}": ${
-          activated ? "activated" : "not activated"
-        }`
-      );
+      // console.log(
+      //   `[SECTION] Checking activation for "${section}": ${
+      //     activated ? "activated" : "not activated"
+      //   }`
+      // );
       return activated;
     },
     async activateSection(section, preloadFn) {
-      console.log(`[ACTIVATE] Attempting to activate "${section}"`);
+      // console.log(`[ACTIVATE] Attempting to activate "${section}"`);
       if (this.isActivated(section)) {
-        console.log(`[ACTIVATE] "${section}" already activated`);
+        // console.log(`[ACTIVATE] "${section}" already activated`);
         return;
       }
       if (this.activating[section]) {
-        console.log(`[ACTIVATE] Waiting for ongoing activation of "${section}"`);
+        // console.log(`[ACTIVATE] Waiting for ongoing activation of "${section}"`);
         await this.activating[section];
         return;
       }
-      console.log(`[ACTIVATE] Starting activation for "${section}"`);
+      // console.log(`[ACTIVATE] Starting activation for "${section}"`);
       const promise = preloadFn()
         .then(() => {
           this.markActivated(section);
         })
         .catch((err) => {
-          console.error(`[ACTIVATE] Error activating "${section}":`, err);
+          // console.error(`[ACTIVATE] Error activating "${section}":`, err);
         })
         .finally(() => {
           delete this.activating[section];

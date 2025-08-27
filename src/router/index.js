@@ -65,23 +65,23 @@ let isNavigating = false;
 
 router.beforeEach((to, from, next) => {
   navigationStartTime = performance.now();
-  console.log(`[ROUTE] Incoming navigation request: "${to.path}"`);
-  console.log(`[CHECK] Looking for matching route configuration...`);
+  // console.log(`[ROUTE] Incoming navigation request: "${to.path}"`);
+  // console.log(`[CHECK] Looking for matching route configuration...`);
   const matchedRoute = routeRecords.find((r) => r.path === to.path);
-  console.log(`[ROUTE] Searching route config for path: "${to.path}" , matched: ${JSON.stringify(matchedRoute)}`);
+  // console.log(`[ROUTE] Searching route config for path: "${to.path}" , matched: ${JSON.stringify(matchedRoute)}`);
   if (!matchedRoute) {
-    console.log(`[404] No route found for "${to.path}". Redirecting to /404.`);
+    // console.log(`[404] No route found for "${to.path}". Redirecting to /404.`);
     return next("/404");
   }
-  console.log(`[FOUND] Route configuration located for "${to.path}".`);
-  console.log(`[CONFIG] Route metadata: ${JSON.stringify(matchedRoute.meta)}`);
+  // console.log(`[FOUND] Route configuration located for "${to.path}".`);
+  // console.log(`[CONFIG] Route metadata: ${JSON.stringify(matchedRoute.meta)}`);
   const section = matchedRoute.meta?.section;
   if (section) {
-    console.log(
-      `[SECTION] Route "${to.path}" belongs to section "${section}".`
-    );
+    // console.log(
+    //   `[SECTION] Route "${to.path}" belongs to section "${section}".`
+    // );
   } else {
-    console.log(`[SECTION] Route "${to.path}" does not specify a section.`);
+    // console.log(`[SECTION] Route "${to.path}" does not specify a section.`);
   }
   isNavigating = true;
   next();
@@ -90,9 +90,9 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to) => {
   if (!isNavigating) return;
 
-  console.log(`[ROUTE] isNavigating flag is true, proceeding to finalize navigation. :${isNavigating}`);
+  // console.log(`[ROUTE] isNavigating flag is true, proceeding to finalize navigation. :${isNavigating}`);
   const duration = (performance.now() - navigationStartTime).toFixed(2);
-  console.log(`[DONE] Navigation to "${to.path}" finished in ${duration}ms.`);
+  // console.log(`[DONE] Navigation to "${to.path}" finished in ${duration}ms.`);
   isNavigating = false;
 });
 
