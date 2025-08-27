@@ -114,48 +114,108 @@ export const authHandler = {
     });
   },
 
-  updateProfileAttributes(attributes) {
+  // updateProfileAttributes(attributes) {
+  //   const user = userPool.getCurrentUser();
+  //   if (!user) return Promise.reject('Not authenticated');
+  //   console.log("[COGNITO] Sending updateProfileAttributes:", attributes);
+  //   return new Promise((resolve, reject) => {
+  //     user.getSession((err, session) => {
+  //       if (err || !session.isValid()) return reject(err || 'Invalid session');
+
+  //       const attrList = Object.entries(attributes).map(
+  //         ([key, value]) => new CognitoUserAttribute({ Name: key, Value: value })
+  //       );
+
+  //       user.updateAttributes(attrList, (err, result) => {
+  //         if (err) return reject(err);
+  //         resolve(result);
+  //       });
+  //     });
+  //   });
+  // },
+
+   updateProfileAttributes(attributes) {
     const user = userPool.getCurrentUser();
-    if (!user) return Promise.reject('Not authenticated');
+    if (!user) return Promise.reject("Not authenticated");
+
+    console.log("[COGNITO] Sending updateProfileAttributes:", attributes);
 
     return new Promise((resolve, reject) => {
       user.getSession((err, session) => {
-        if (err || !session.isValid()) return reject(err || 'Invalid session');
+        if (err || !session.isValid()) {
+          console.error("[COGNITO] Invalid session during update:", err);
+          return reject(err || "Invalid session");
+        }
 
         const attrList = Object.entries(attributes).map(
           ([key, value]) => new CognitoUserAttribute({ Name: key, Value: value })
         );
 
         user.updateAttributes(attrList, (err, result) => {
-          if (err) return reject(err);
+          if (err) {
+            console.error("[COGNITO] updateProfileAttributes error:", err);
+            return reject(err);
+          }
+          console.log("[COGNITO] updateProfileAttributes response:", result);
           resolve(result);
         });
       });
     });
   },
+  // async restoreSession() {
+  //   const user = userPool.getCurrentUser();
+  //   if (!user) {
+  //     console.log('[AUTH] No current user found');
+  //     return Promise.reject('No user');
+  //   }
 
-  async restoreSession() {
+  //   return new Promise((resolve, reject) => {
+  //     user.getSession((err, session) => {
+  //       if (err || !session.isValid()) {
+  //         console.log('[AUTH] Session invalid or error:', err);
+  //         return reject(err || 'Invalid session');
+  //       }
+
+  //       const idToken = session.getIdToken().getJwtToken();
+  //       const accessToken = session.getAccessToken().getJwtToken();
+  //       const refreshToken = session.getRefreshToken().getToken();
+  //       // Store tokens for logging after navigation
+  //       pendingTokens = { idToken, accessToken, refreshToken };
+  //       console.log('[AUTH] Session restored successfully');
+  //       resolve({ idToken, accessToken, refreshToken });
+  //     });
+  //   });
+  // }
+
+   async restoreSession() {
     const user = userPool.getCurrentUser();
     if (!user) {
-      console.log('[AUTH] No current user found');
-      return Promise.reject('No user');
+      console.log("[AUTH] No current user found");
+      return Promise.reject("No user");
     }
 
     return new Promise((resolve, reject) => {
       user.getSession((err, session) => {
         if (err || !session.isValid()) {
-          console.log('[AUTH] Session invalid or error:', err);
-          return reject(err || 'Invalid session');
+          console.log("[AUTH] Session invalid or error:", err);
+          return reject(err || "Invalid session");
         }
 
         const idToken = session.getIdToken().getJwtToken();
         const accessToken = session.getAccessToken().getJwtToken();
         const refreshToken = session.getRefreshToken().getToken();
-        // Store tokens for logging after navigation
+
         pendingTokens = { idToken, accessToken, refreshToken };
-        console.log('[AUTH] Session restored successfully');
+
+        console.log("[AUTH] Session restored successfully");
+        console.log("[AUTH] Restored tokens (truncated):", {
+          idToken: idToken?.substring(0, 20) + "...",
+          accessToken: accessToken?.substring(0, 20) + "...",
+          refreshToken: refreshToken?.substring(0, 10) + "...",
+        });
+
         resolve({ idToken, accessToken, refreshToken });
       });
     });
-  }
+  },
 };

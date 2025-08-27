@@ -9,7 +9,7 @@
         placeholder="Password"
         required
       />
-      <button type="submit">Login</button>
+      <button type="submit">{{isLoading?'logging in...':'login'}}</button>
     </form>
     <p v-if="error">{{ error }}</p>
   </div>
@@ -26,9 +26,11 @@ const password = ref("");
 const error = ref("");
 const router = useRouter();
 const auth = useAuthStore();
+const isLoading = ref(false);
 
 async function handleLogin() {
   try {
+    isLoading.value = true;
     console.log("[LOGIN] Attempting login with:", email.value);
     const { idToken, accessToken, refreshToken } = await authHandler.login(
       email.value,
@@ -40,7 +42,7 @@ async function handleLogin() {
     localStorage.setItem("refreshToken", refreshToken);
     auth.setTokenAndDecode(idToken);
     auth.startTokenRefreshLoop();
-
+    isLoading.value = false;
     if (!auth.currentUser.onboardingPassed) {
       router.push("/sign-up/onboarding");
     } else if (

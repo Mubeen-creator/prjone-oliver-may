@@ -2,7 +2,7 @@
   <div>
     <h1>KYC</h1>
     <p>Complete your KYC here (placeholder form).</p>
-    <button @click="completeKyc">Complete KYC</button>
+    <button @click="completeKyc">{{ isLoading ? 'Please wait...' : 'Complete KYC' }}</button>
     <p v-if="error">{{ error }}</p>
   </div>
 </template>
@@ -16,28 +16,38 @@ import { authHandler } from "@/services/authHandler";
 const router = useRouter();
 const auth = useAuthStore();
 const error = ref("");
+const isLoading = ref(false);
 
 async function completeKyc() {
+  const start = performance.now();
+  console.log("[KYC] User clicked Complete KYC at:", new Date().toISOString());
+
   try {
-    const start = performance.now();
-    console.log("[KYC] Starting KYC completion at:", start);
+    isLoading.value = true;
+    console.log("[UI] Button changed to 'Please wait...'");
 
+    // --- Update Cognito ---
     await authHandler.updateProfileAttributes({ "custom:kyc": "true" });
-
     const mid = performance.now();
     console.log(`[KYC] updateProfileAttributes took ${(mid - start).toFixed(2)} ms`);
 
+    // --- Restore Session ---
     const { idToken } = await authHandler.restoreSession();
-
     const end = performance.now();
     console.log(`[KYC] restoreSession took ${(end - mid).toFixed(2)} ms`);
     console.log(`[KYC] Total KYC completion flow took ${(end - start).toFixed(2)} ms`);
 
+    // --- Update local state ---
     auth.setTokenAndDecode(idToken);
+    console.log("[KYC] Cognito update finished → navigating to /dashboard");
+
     router.push("/dashboard");
   } catch (err) {
     error.value = "Failed to complete KYC: " + (err.message || "Unknown error");
     console.error("[KYC] Error during KYC completion:", err);
+  } finally {
+    isLoading.value = false;
+    console.log("[UI] Button reset to 'Complete KYC'");
   }
 }
 

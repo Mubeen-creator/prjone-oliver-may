@@ -44,7 +44,7 @@ export const useAuthStore = defineStore("auth", {
     },
 
     logout() {
-      authHandler.logout(); // Ensure handler logout is called
+      authHandler.logout(); 
       localStorage.clear();
       this.$reset();
     },
