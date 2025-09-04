@@ -11,6 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test:unit": "vitest",
+    "build:css": "node scripts/build-css.js",
     "build:lazy": "vite build --mode lazy --outDir dist-lazy",
     "build:eager": "vite build --mode eager --outDir dist-eager-all",
     "build:eager:auth": "VITE_EAGER_SECTION=auth vite build --mode eager --outDir dist-eager-auth",
@@ -27,16 +28,19 @@
     "jwt-decode": "^4.0.0",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.5.0",
-    "tailwindcss": "^4.1.12",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.1.12",
     "@tailwindcss/vite": "^4.1.12",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/test-utils": "^2.4.6",
+    "autoprefixer": "^10.4.21",
     "happy-dom": "^18.0.1",
     "jsdom": "^26.1.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
     "vite": "^7.0.6",
     "vite-plugin-vue-devtools": "^8.0.0",
     "vitest": "^3.2.4"

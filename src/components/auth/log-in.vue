@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="bg-red-700">Loginfgrfgfgdd</h1>
+    <h1 class="bg-red-500 text-white p-4 text-2xl font-bold fs-pb-66 fs-fz-22 pb-44">Loginfgrfgfgdd</h1>
     <form @submit.prevent="handleLogin">
       <input v-model="email" type="email" placeholder="Email" required />
       <input v-model="password" type="password" placeholder="Password" required />

@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* place truly global layer extensions here if needed
+@layer components {
+  .btn { @apply inline-flex items-center justify-center rounded px-3 py-2; }
+}
+*/
