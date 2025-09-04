@@ -28,7 +28,7 @@ export default {
   },
   plugins: [
     // Custom short utilities — generated on-demand via matchUtilities
-    plugin(function({ matchUtilities, theme }) {
+    plugin(function({ matchUtilities }) {
       // numeric token sets
       const PB = pxScale([8, 12, 16, 22, 44, 66, 88, 120]);
       const MT = pxScale([8, 16, 24, 32, 48, 64, 120]);
