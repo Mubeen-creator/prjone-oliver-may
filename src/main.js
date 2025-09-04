@@ -3,6 +3,7 @@ import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import App from "./App.vue";
 import router from "./router";
+import "./assets/main.css";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { authHandler } from "@/services/authHandler";
 import { useSectionsStore } from "./stores/sectionStore";

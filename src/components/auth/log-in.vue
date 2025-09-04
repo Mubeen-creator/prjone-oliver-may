@@ -1,15 +1,10 @@
 <template>
   <div>
-    <h1>Login</h1>
+    <h1 class="bg-red-700">Loginfgrfgfgdd</h1>
     <form @submit.prevent="handleLogin">
       <input v-model="email" type="email" placeholder="Email" required />
-      <input
-        v-model="password"
-        type="password"
-        placeholder="Password"
-        required
-      />
-      <button type="submit">{{isLoading?'logging in...':'login'}}</button>
+      <input v-model="password" type="password" placeholder="Password" required />
+      <button type="submit">{{ isLoading ? 'logging in...' : 'login' }}</button>
     </form>
     <p v-if="error">{{ error }}</p>
   </div>

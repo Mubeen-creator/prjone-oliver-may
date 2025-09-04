@@ -1,4 +1,6 @@
 import { fileURLToPath, URL } from "node:url";
+import tailwindcss from '@tailwindcss/vite'
+
 
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
@@ -43,7 +45,7 @@ async function generateManifest() {
 
 export default defineConfig(({ mode }) => {
   return {
-    plugins: [vue(), vueDevTools()],
+    plugins: [vue(), vueDevTools(), tailwindcss()],
     define: {
       global: "globalThis",
     },
