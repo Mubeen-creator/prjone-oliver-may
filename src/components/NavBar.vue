@@ -1,40 +1,14 @@
-
 <template>
-  <section >
-    <div class="navigation-buttons">
-      <button @click="goToSignUp">Go to Sign Up</button>
-      <button @click="goToDashboard">Go to Dashboard</button>
-      <button @click="goToProfile">Go to Profile</button>
-    </div>
-  </section>
+  <nav class="fs-h-80 fs-w-300 bg-gray-800 text-white fs-pb-12">
+    <div class="fs-fz-18 fs-lh-20 fs-mt-16">NAVBAR COMPONENT (Single Component)</div>
+    <ul class="fs-pb-8 fs-fz-14">
+      <li class="fs-mt-8">Home</li>
+      <li class="fs-mt-8">About</li>
+      <li class="fs-mt-8">Contact</li>
+    </ul>
+  </nav>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-
-function goToSignUp() {
-  router.push('/sign-up');
-}
-
-function goToDashboard() {
-  router.push('/dashboard');
-}
-
-function goToProfile() {
-  router.push('/profile');
-}
+// NavBar component logic
 </script>
-
-<style scoped>
-.navigation-buttons {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-}
-button {
-  padding: 8px 16px;
-  cursor: pointer;
-}
-</style>

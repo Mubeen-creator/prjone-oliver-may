@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h1 class="bg-red-500 text-white p-4 text-2xl font-bold fs-pb-66 fs-fz-22 pb-44">Loginfgrfgfgdd</h1>
-    <form @submit.prevent="handleLogin">
-      <input v-model="email" type="email" placeholder="Email" required />
-      <input v-model="password" type="password" placeholder="Password" required />
-      <button type="submit">{{ isLoading ? 'logging in...' : 'login' }}</button>
+    <h1 class="bg-red-500 text-white p-4 text-2xl font-bold fs-pb-66 fs-fz-22 pb-44 fs-mt-120">AUTH SECTION - Login Page</h1>
+    <form @submit.prevent="handleLogin" class="fs-w-300 fs-lh-32">
+      <input v-model="email" type="email" placeholder="Email" required class="fs-pb-22 fs-fz-16" />
+      <input v-model="password" type="password" placeholder="Password" required class="fs-pb-22 fs-fz-16" />
+      <button type="submit" class="fs-h-100 fs-fz-20">{{ isLoading ? 'logging in...' : 'login' }}</button>
     </form>
     <p v-if="error">{{ error }}</p>
   </div>
